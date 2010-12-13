@@ -22,18 +22,18 @@ Tetramino::Tetramino()
     //initialize everything to 0
     xVel = 0;
     yVel = 0;
-    currForm = 1;
+    currForm = 0;
     prevForm = 0;
 
     //init block stuff
-    blocks[0].offsets.x = 175;    
-    blocks[0].offsets.y = -20;
-    blocks[1].offsets.x = 200;
-    blocks[1].offsets.y = -20;
-    blocks[2].offsets.x = 225;
-    blocks[2].offsets.y = -20;
-    blocks[3].offsets.x = 250;
-    blocks[3].offsets.y = -20;
+    //blocks[0].offsets.x = 175;    
+    //blocks[0].offsets.y = -20;
+    //blocks[1].offsets.x = 200;
+    //blocks[1].offsets.y = -20;
+    //blocks[2].offsets.x = 225;
+    //blocks[2].offsets.y = -20;
+    //blocks[3].offsets.x = 250;
+    //blocks[3].offsets.y = -20;
 }
 
 void Tetramino::handle_input()
@@ -60,16 +60,18 @@ void Tetramino::handle_input()
 //determines the current form
 void Tetramino::determine_form()
 {
+
+    currForm = 2;
     if(currForm == 0)
     {
 	blocks[0].offsets.x = 175;    
-	blocks[0].offsets.y = -20;
+	blocks[0].offsets.y = 0;
 	blocks[1].offsets.x = 200;
-	blocks[1].offsets.y = -20;
+	blocks[1].offsets.y = 0;
 	blocks[2].offsets.x = 225;
-	blocks[2].offsets.y = -20;
+	blocks[2].offsets.y = 0;
 	blocks[3].offsets.x = 250;
-	blocks[3].offsets.y = -20;
+	blocks[3].offsets.y = 0;
     }
     if(currForm == 1)
     {
@@ -82,15 +84,24 @@ void Tetramino::determine_form()
 	blocks[3].offsets.x = 225;
 	blocks[3].offsets.y = 25;
     }
-
-    std::cout << "Form has been determined" << std::endl;
+    if(currForm == 2)
+    {
+	blocks[0].offsets.x = 175;
+	blocks[0].offsets.y = 0;
+	blocks[1].offsets.x = 200;
+	blocks[1].offsets.y = 0;
+	blocks[2].offsets.x = 175;
+	blocks[2].offsets.y = 25;
+	blocks[3].offsets.x = 200;
+	blocks[3].offsets.y = 25;
+    }
 }
 
 void Tetramino::gravity()
 {
-    yVel = GRAV_SPEED;
+    yVel += GRAV_SPEED;
 
-    std::cout << "Gravity has been controlled" << std::endl;
+
 }
 
 void Tetramino::move()
@@ -100,7 +111,7 @@ void Tetramino::move()
     blocks[2].offsets.y += yVel;
     blocks[3].offsets.y += yVel;
 
-    std::cout << "Tetramino has been moved" << std::endl;
+
 }
 
 void Tetramino::show()
@@ -110,5 +121,5 @@ void Tetramino::show()
     blocks[2].show();
     blocks[3].show();
 
-    std::cout << "Tetramino has been shown" << std::endl;
+
 }
