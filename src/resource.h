@@ -67,8 +67,8 @@ public:
     //the current form
     int currForm;
 
-    //the form of the previous tetramino
-    int prevForm;
+    //the current rotation
+    int rotation;
 
     //the velocities of the tetramino
     int xVel, yVel;
@@ -84,6 +84,9 @@ public:
 
     //determines the tetraminos form
     void determine_form();
+
+    //rotates the tetramino
+    void rotate();
 
     //shows the tetramino
     void show();

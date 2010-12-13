@@ -44,6 +44,7 @@ int main( int argc, char* args[] )
 	//tetramino stuff
 	myMino.determine_form();
 	myMino.gravity();
+	myMino.handle_input();
 	myMino.move();
 	myMino.show();
 

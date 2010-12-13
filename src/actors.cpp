@@ -23,17 +23,7 @@ Tetramino::Tetramino()
     xVel = 0;
     yVel = 0;
     currForm = 0;
-    prevForm = 0;
-
-    //init block stuff
-    //blocks[0].offsets.x = 175;    
-    //blocks[0].offsets.y = -20;
-    //blocks[1].offsets.x = 200;
-    //blocks[1].offsets.y = -20;
-    //blocks[2].offsets.x = 225;
-    //blocks[2].offsets.y = -20;
-    //blocks[3].offsets.x = 250;
-    //blocks[3].offsets.y = -20;
+    rotation = 0;
 }
 
 void Tetramino::handle_input()
@@ -44,7 +34,12 @@ void Tetramino::handle_input()
         //
         if (event.key.keysym.sym == SDLK_LEFT)
 	{
-	    currForm++;
+	    rotate();
+	    rotation++;
+	    if(rotation > 3)
+	    {
+		rotation = 0;
+	    }
 	}
     }
     //If a key was released
@@ -61,8 +56,9 @@ void Tetramino::handle_input()
 void Tetramino::determine_form()
 {
 
-    currForm = 2;
-    if(currForm == 0)
+    currForm = 0;
+    bool already_done = false;
+    if(currForm == 0 && already_done != true)
     {
 	blocks[0].offsets.x = 175;    
 	blocks[0].offsets.y = 0;
@@ -72,6 +68,7 @@ void Tetramino::determine_form()
 	blocks[2].offsets.y = 0;
 	blocks[3].offsets.x = 250;
 	blocks[3].offsets.y = 0;
+	already_done = true;
     }
     if(currForm == 1)
     {
@@ -97,11 +94,34 @@ void Tetramino::determine_form()
     }
 }
 
+void Tetramino::rotate()
+{
+    if(currForm == 0)
+    {
+	if(rotation == 0 || rotation == 2)
+	{
+	    blocks[1].offsets.x = blocks[0].offsets.x;
+	    blocks[1].offsets.y = blocks[0].offsets.y + 25;
+	    blocks[2].offsets.x = blocks[0].offsets.x;
+	    blocks[2].offsets.y = blocks[1].offsets.y + 25;
+	    blocks[3].offsets.x = blocks[0].offsets.x;
+	    blocks[3].offsets.y = blocks[2].offsets.y + 25;
+	}
+	if(rotation == 1 || rotation == 3)
+	{
+	    blocks[1].offsets.x = blocks[0].offsets.x + 25;
+	    blocks[1].offsets.y = blocks[0].offsets.y;
+	    blocks[2].offsets.x = blocks[1].offsets.x + 25;
+	    blocks[2].offsets.y = blocks[1].offsets.y;
+	    blocks[3].offsets.x = blocks[2].offsets.x + 25;
+	    blocks[3].offsets.y = blocks[2].offsets.y;
+	}
+    }
+}
+
 void Tetramino::gravity()
 {
-    yVel += GRAV_SPEED;
-
-
+    yVel = 5;
 }
 
 void Tetramino::move()
@@ -110,8 +130,7 @@ void Tetramino::move()
     blocks[1].offsets.y += yVel;
     blocks[2].offsets.y += yVel;
     blocks[3].offsets.y += yVel;
-
-
+    //std::cout << "Moved" << std::endl;
 }
 
 void Tetramino::show()
@@ -120,6 +139,4 @@ void Tetramino::show()
     blocks[1].show();
     blocks[2].show();
     blocks[3].show();
-
-
 }
