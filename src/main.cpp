@@ -29,7 +29,7 @@ int main( int argc, char* args[] )
         //While there's events to handle
         while( SDL_PollEvent( &event ) )
         {
-
+	   
             //If the user has Xed out the window
             if( event.type == SDL_QUIT )
             {
@@ -44,8 +44,8 @@ int main( int argc, char* args[] )
 	//tetramino stuff
 	myMino.determine_form();
 	myMino.gravity();
-	myMino.handle_input();
 	myMino.move();
+	myMino.handle_input();
 	myMino.show();
 
         //Update the screen

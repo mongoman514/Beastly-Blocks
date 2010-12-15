@@ -4,17 +4,17 @@ all:
 most:
 	g++ -c main.cpp actors.cpp functions.cpp timerclass.cpp resource.cpp
 
-main.o:
+Main:
 	g++ -c main.cpp
 
-actors.o:
+actors:
 	g++ -c actors.cpp
 
-functions.o:
+functions:
 	g++ -c functions.cpp
 
-timerclass.o:
+timerclass:
 	g++ -c timerclass.cpp
 
-resource.o:
+resource:
 	g++ -c resource.cpp

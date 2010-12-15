@@ -67,6 +67,9 @@ public:
     //the current form
     int currForm;
 
+    //a test
+    int done;
+
     //the current rotation
     int rotation;
 
