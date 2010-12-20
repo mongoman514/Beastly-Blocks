@@ -58,6 +58,27 @@ bool check_collision( SDL_Rect A, SDL_Rect B )
     return true;
 }
 
+bool check_tet_collision(Tetramino A, Tetramino B)
+{
+    if(check_collision(A.blocks[0].offsets, B.blocks[0].offsets) == true)
+    {
+	return true;
+    }
+    if(check_collision(A.blocks[1].offsets, B.blocks[1].offsets) == true)
+    {
+	return true;
+    }
+    if(check_collision(A.blocks[2].offsets, B.blocks[2].offsets) == true)
+    {
+	return true;
+    }
+    if(check_collision(A.blocks[3].offsets, B.blocks[3].offsets) == true)
+    {
+	return true;
+    }
+    return false;
+}
+
 void clean_up()
 {
     SDL_Quit();

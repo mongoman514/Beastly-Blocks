@@ -22,6 +22,8 @@ extern const int FRAMES_PER_SECOND;
 extern SDL_Surface *screen;
 extern SDL_Surface *background;
 
+class Tetramino;
+
 
 //the global function declarations
 extern bool init();
@@ -30,6 +32,7 @@ extern void apply_surface( int x, int y, SDL_Surface* source, SDL_Surface* desti
 extern SDL_Surface *load_image( std::string filename );
 extern void clean_up();
 extern bool load_files();
+extern bool check_tet_collision(Tetramino A, Tetramino B);
 
 //the event structure
 extern SDL_Event event;
@@ -55,11 +58,8 @@ public:
     //the constructor
     Tetramino();
 
-    //the offsets
-    SDL_Rect offsets;
-
-    //the orientation
-    int Orientation;
+    //the overall block
+    SDL_Rect overall;
 
     //the blocks that will make up the tetramino
     Block blocks[4];
@@ -68,7 +68,7 @@ public:
     int currForm;
 
     //a test
-    int done;
+    bool done;
 
     //the current rotation
     int rotation;
@@ -78,6 +78,8 @@ public:
 
     //handles the input
     void handle_input();
+
+    bool move_back;
 
     //controls the gravity
     void gravity();
@@ -94,8 +96,14 @@ public:
     //shows the tetramino
     void show();
 
+    //the dead/alive status
+    bool alive;
+
     //befriends the block class
     friend class Block;
 };
+
+extern Tetramino myMino[50];
+extern int counter;
 
 #endif //RESOURCE_H

@@ -15,6 +15,12 @@ SDL_Surface *background = NULL;
 //the gravity speed
 const int GRAV_SPEED = 2;
 
+//integer
+int form = 0;
+
+Tetramino myMino[50];
+int counter = 0;
+
 //the event structure
 SDL_Event event;
 
