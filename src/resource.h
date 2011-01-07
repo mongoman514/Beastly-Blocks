@@ -98,6 +98,7 @@ public:
 
     //the dead/alive status
     bool alive;
+    bool bottom;
 
     //befriends the block class
     friend class Block;

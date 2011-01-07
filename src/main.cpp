@@ -1,4 +1,5 @@
 #include "resource.h"
+#include "yes.h"
 
 int main( int argc, char* args[] )
 {
@@ -35,9 +36,8 @@ int main( int argc, char* args[] )
         fps.start();
 
         //While there's events to handle
-        if( SDL_PollEvent( &event ) )
+        while( SDL_PollEvent( &event ) )
         {
-	   
             //If the user has Xed out the window
             if( event.type == SDL_QUIT )
             {
@@ -53,6 +53,7 @@ int main( int argc, char* args[] )
 	myMino[counter].determine_form();
 	myMino[counter].gravity();
 	myMino[counter].handle_input();
+	yes = false;
 	myMino[counter].move();
 	myMino[counter].show();
 
@@ -60,10 +61,21 @@ int main( int argc, char* args[] )
 	{
 	   counter++;
 	   form++;
-	   myMino[counter].currForm = form;
-	   if (form >= 4)
+	   if (form > 4)
 	   {
 	      form = 0;
+	   }
+	   myMino[counter].currForm = form;
+	   if(myMino[counter].blocks[0].offsets.w == 0)
+	   {
+	      myMino[counter].blocks[0].offsets.w = 25;
+	      myMino[counter].blocks[0].offsets.h = 25;
+	      myMino[counter].blocks[1].offsets.w = 25;
+	      myMino[counter].blocks[1].offsets.h = 25;	     
+	      myMino[counter].blocks[2].offsets.w = 25;
+	      myMino[counter].blocks[2].offsets.h = 25;	   
+	      myMino[counter].blocks[3].offsets.w = 25;
+	      myMino[counter].blocks[3].offsets.h = 25;
 	   }
 	   myMino[counter].done = false;
 	}

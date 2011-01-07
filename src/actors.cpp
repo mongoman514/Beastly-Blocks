@@ -1,5 +1,7 @@
 #include "resource.h"
+#include "yes.h"
 
+bool yes = false;
 
 //block functions
 Block::Block()
@@ -23,11 +25,19 @@ Tetramino::Tetramino()
     xVel = 0;
     yVel = 0;
     currForm = 4;
-    rotation = 0;
+    if(currForm = 1)
+    {
+        rotation = 1;
+    }
+    else
+    {
+	rotation = 1;
+    }
     done = false;
 
     //init to alive
     alive = true;
+    bottom = false;
 }
 
 void Tetramino::handle_input()
@@ -36,7 +46,6 @@ void Tetramino::handle_input()
     if( event.type == SDL_MOUSEBUTTONDOWN)
     {
 	rotate();
-	rotation++;
 	if(rotation > 3)
 	{
 	    rotation = 0;
@@ -44,32 +53,32 @@ void Tetramino::handle_input()
     }
     if(event.type == SDL_KEYDOWN)
     {
-	if(event.key.keysym.sym == SDLK_LEFT)
+	switch (event.key.keysym.sym)
 	{
-	    xVel = -7;
-	}
-	if(event.key.keysym.sym == SDLK_RIGHT)
-	{
-	    xVel = 7;
-	}
-	if(event.key.keysym.sym == SDLK_DOWN)
-	{
-	    yVel = 20;
+	    case SDLK_LEFT:
+	        xVel = -25;
+	        break;
+	    case SDLK_RIGHT:
+	        xVel = 25;
+	        break;
+	    case SDLK_DOWN:
+	        yVel = 25;
+	        break;
 	}
     }
     if(event.type == SDL_KEYUP)
     {
-	if(event.key.keysym.sym == SDLK_LEFT)
+	switch (event.key.keysym.sym)
 	{
-	    xVel = 0;
-	}
-	if(event.key.keysym.sym == SDLK_RIGHT)
-	{
-	    xVel = 0;
-	}
-	if(event.key.keysym.sym == SDLK_DOWN)
-	{
-	    yVel = 2;
+	    case SDLK_LEFT:
+		xVel = 0;
+		break;
+	    case SDLK_RIGHT:
+		xVel = 0;
+		break;
+	    case SDLK_DOWN:
+		yVel = 2;
+		break;
 	}
     }
 }
@@ -77,7 +86,6 @@ void Tetramino::handle_input()
 //determines the current form
 void Tetramino::determine_form()
 {
-    std::cout << "The done status, " << done << std::endl;
     if(done == false)
     {
         if(currForm == 0)
@@ -191,7 +199,7 @@ void Tetramino::rotate()
 {
     if(currForm == 0)
     {
-	if(rotation == 0) 
+	if(rotation == 0 && yes != true) 
 	{
 	    blocks[1].offsets.x = blocks[0].offsets.x + 25;
 	    blocks[1].offsets.y = blocks[0].offsets.y;
@@ -199,7 +207,19 @@ void Tetramino::rotate()
 	    blocks[2].offsets.y = blocks[0].offsets.y;
 	    blocks[3].offsets.x = blocks[2].offsets.x + 25;
 	    blocks[3].offsets.y = blocks[0].offsets.y;
-
+	    while(blocks[3].offsets.y != blocks[0].offsets.y)
+	    {
+		blocks[1].offsets.x = blocks[0].offsets.x + 25;
+		blocks[1].offsets.y = blocks[0].offsets.y;
+		blocks[2].offsets.x = blocks[1].offsets.x + 25;
+		blocks[2].offsets.y = blocks[0].offsets.y;
+		blocks[3].offsets.x = blocks[2].offsets.x + 25;
+		blocks[3].offsets.y = blocks[0].offsets.y;
+	    }
+	    if(blocks[3].offsets.y == blocks[0].offsets.y)
+	    {
+	        rotation++;
+	    }
 	    //reset width/height
 	    blocks[0].offsets.w = 25;
 	    blocks[0].offsets.h = 25;
@@ -209,8 +229,9 @@ void Tetramino::rotate()
 	    blocks[2].offsets.h = 25;
 	    blocks[3].offsets.w = 25;
 	    blocks[3].offsets.h = 25;
+	    yes = true;
 	}
-	if(rotation == 1)
+	if(rotation == 1 && yes != true)
 	{
 	    blocks[1].offsets.x = blocks[0].offsets.x;
 	    blocks[1].offsets.y = blocks[0].offsets.y + 25;
@@ -218,7 +239,19 @@ void Tetramino::rotate()
 	    blocks[2].offsets.y = blocks[1].offsets.y + 25;
 	    blocks[3].offsets.x = blocks[2].offsets.x;
 	    blocks[3].offsets.y = blocks[2].offsets.y + 25;
-
+	    while(blocks[1].offsets.y != blocks[0].offsets.y + 25)
+	    {
+	        blocks[1].offsets.x = blocks[0].offsets.x;
+	        blocks[1].offsets.y = blocks[0].offsets.y + 25;
+	        blocks[2].offsets.x = blocks[1].offsets.x;
+	        blocks[2].offsets.y = blocks[1].offsets.y + 25;
+	        blocks[3].offsets.x = blocks[2].offsets.x;
+	        blocks[3].offsets.y = blocks[2].offsets.y + 25;
+	    }
+	    if(blocks[1].offsets.y == blocks[0].offsets.y + 25)
+	    {
+	        rotation++;
+	    }
 	    //reset width/height
 	    blocks[0].offsets.w = 25;
 	    blocks[0].offsets.h = 25;
@@ -228,8 +261,9 @@ void Tetramino::rotate()
 	    blocks[2].offsets.h = 25;
 	    blocks[3].offsets.w = 25;
 	    blocks[3].offsets.h = 25;
+	    yes = true;
 	}
-	if(rotation == 2)
+	if(rotation == 2 && yes != true)
 	{
 	    blocks[1].offsets.x = blocks[0].offsets.x - 25;
 	    blocks[1].offsets.y = blocks[0].offsets.y;
@@ -237,7 +271,19 @@ void Tetramino::rotate()
 	    blocks[2].offsets.y = blocks[0].offsets.y;
 	    blocks[3].offsets.x = blocks[2].offsets.x - 25;
 	    blocks[3].offsets.y = blocks[0].offsets.y;
-
+	    while(blocks[1].offsets.x != blocks[0].offsets.x - 25)
+	    {
+	        blocks[1].offsets.x = blocks[0].offsets.x - 25;
+	        blocks[1].offsets.y = blocks[0].offsets.y;
+	        blocks[2].offsets.x = blocks[1].offsets.x - 25;
+	        blocks[2].offsets.y = blocks[1].offsets.y;
+	        blocks[3].offsets.x = blocks[2].offsets.x - 25;
+	        blocks[3].offsets.y = blocks[2].offsets.y;
+	    }
+	    if(blocks[1].offsets.x == blocks[0].offsets.x - 25)
+	    {
+	        rotation++;
+	    }
 	    //reset width/height
 	    blocks[0].offsets.w = 25;
 	    blocks[0].offsets.h = 25;
@@ -247,8 +293,9 @@ void Tetramino::rotate()
 	    blocks[2].offsets.h = 25;
 	    blocks[3].offsets.w = 25;
 	    blocks[3].offsets.h = 25;
+	    yes = true;
 	}
-	if(rotation == 3)
+	if(rotation == 3 && yes != true)
 	{
 	    blocks[1].offsets.x = blocks[0].offsets.x;
 	    blocks[1].offsets.y = blocks[0].offsets.y - 25;
@@ -256,7 +303,19 @@ void Tetramino::rotate()
 	    blocks[2].offsets.y = blocks[1].offsets.y - 25;
 	    blocks[3].offsets.x = blocks[2].offsets.x;
 	    blocks[3].offsets.y = blocks[2].offsets.y - 25;
-
+	    while(blocks[3].offsets.y != blocks[2].offsets.y - 25)
+	    {
+	        blocks[1].offsets.x = blocks[0].offsets.x;
+	        blocks[1].offsets.y = blocks[0].offsets.y - 25;
+	        blocks[2].offsets.x = blocks[1].offsets.x;
+	        blocks[2].offsets.y = blocks[1].offsets.y - 25;
+	        blocks[3].offsets.x = blocks[2].offsets.x;
+	        blocks[3].offsets.y = blocks[2].offsets.y - 25;
+	    }
+	    if(blocks[3].offsets.y == blocks[2].offsets.y - 25)
+	    {
+	        rotation++;
+	    }
 	    //reset width/height
 	    blocks[0].offsets.w = 25;
 	    blocks[0].offsets.h = 25;
@@ -270,64 +329,7 @@ void Tetramino::rotate()
     }
     if(currForm == 1)
     {
-	if(rotation == 0) 
-	{
-	    blocks[1].offsets.x = blocks[0].offsets.x;
-	    blocks[1].offsets.y = blocks[0].offsets.y + 25;
-	    blocks[2].offsets.x = blocks[1].offsets.x;
-	    blocks[2].offsets.y = blocks[1].offsets.y + 25;
-	    blocks[3].offsets.x = blocks[2].offsets.x - 25;
-	    blocks[3].offsets.y = blocks[2].offsets.y;
-
-	    //reset width/height
-	    blocks[0].offsets.w = 25;
-	    blocks[0].offsets.h = 25;
-	    blocks[1].offsets.w = 25;
-	    blocks[1].offsets.h = 25;
-	    blocks[2].offsets.w = 25;
-	    blocks[2].offsets.h = 25;
-	    blocks[3].offsets.w = 25;
-	    blocks[3].offsets.h = 25;
-	}
-	if(rotation == 1)
-	{
-	    blocks[1].offsets.x = blocks[0].offsets.x - 25;
-	    blocks[1].offsets.y = blocks[0].offsets.y;
-	    blocks[2].offsets.x = blocks[1].offsets.x - 25;
-	    blocks[2].offsets.y = blocks[1].offsets.y;
-	    blocks[3].offsets.x = blocks[2].offsets.x;
-	    blocks[3].offsets.y = blocks[2].offsets.y - 25;
-
-	    //reset width/height
-	    blocks[0].offsets.w = 25;
-	    blocks[0].offsets.h = 25;
-	    blocks[1].offsets.w = 25;
-	    blocks[1].offsets.h = 25;
-	    blocks[2].offsets.w = 25;
-	    blocks[2].offsets.h = 25;
-	    blocks[3].offsets.w = 25;
-	    blocks[3].offsets.h = 25;
-	}
-	if(rotation == 2)
-	{
-	    blocks[1].offsets.x = blocks[0].offsets.x;
-	    blocks[1].offsets.y = blocks[0].offsets.y - 25;
-	    blocks[2].offsets.x = blocks[1].offsets.x;
-	    blocks[2].offsets.y = blocks[1].offsets.y - 25;
-	    blocks[3].offsets.x = blocks[2].offsets.x + 25;
-	    blocks[3].offsets.y = blocks[2].offsets.y;
-
-	    //reset width/height
-	    blocks[0].offsets.w = 25;
-	    blocks[0].offsets.h = 25;
-	    blocks[1].offsets.w = 25;
-	    blocks[1].offsets.h = 25;
-	    blocks[2].offsets.w = 25;
-	    blocks[2].offsets.h = 25;
-	    blocks[3].offsets.w = 25;
-	    blocks[3].offsets.h = 25;
-	}
-	if(rotation == 3)
+	if(rotation == 0 && yes != true) 
 	{
 	    blocks[1].offsets.x = blocks[0].offsets.x + 25;
 	    blocks[1].offsets.y = blocks[0].offsets.y;
@@ -336,6 +338,20 @@ void Tetramino::rotate()
 	    blocks[3].offsets.x = blocks[2].offsets.x;
 	    blocks[3].offsets.y = blocks[2].offsets.y + 25;
 
+	    while(blocks[3].offsets.y != blocks[2].offsets.y + 25)
+	    {
+	        blocks[1].offsets.x = blocks[0].offsets.x + 25;
+	        blocks[1].offsets.y = blocks[0].offsets.y;
+	        blocks[2].offsets.x = blocks[1].offsets.x + 25;
+	        blocks[2].offsets.y = blocks[1].offsets.y;
+	        blocks[3].offsets.x = blocks[2].offsets.x;
+	        blocks[3].offsets.y = blocks[2].offsets.y + 25;
+	    }
+
+	    if(blocks[3].offsets.y == blocks[2].offsets.y + 25)
+	    {
+		rotation++;
+	    }
 	    //reset width/height
 	    blocks[0].offsets.w = 25;
 	    blocks[0].offsets.h = 25;
@@ -345,68 +361,114 @@ void Tetramino::rotate()
 	    blocks[2].offsets.h = 25;
 	    blocks[3].offsets.w = 25;
 	    blocks[3].offsets.h = 25;
+	    yes = true;
+	}
+	if(rotation == 1 && yes != true)
+	{
+	    blocks[1].offsets.x = blocks[0].offsets.x;
+	    blocks[1].offsets.y = blocks[0].offsets.y + 25;
+	    blocks[2].offsets.x = blocks[1].offsets.x;
+	    blocks[2].offsets.y = blocks[1].offsets.y + 25;
+	    blocks[3].offsets.x = blocks[2].offsets.x - 25;
+	    blocks[3].offsets.y = blocks[2].offsets.y;
+
+	    while(blocks[3].offsets.x != blocks[2].offsets.x - 25)
+	    {
+		blocks[1].offsets.x = blocks[0].offsets.x;
+		blocks[1].offsets.y = blocks[0].offsets.y + 25;
+		blocks[2].offsets.x = blocks[1].offsets.x;
+		blocks[2].offsets.y = blocks[1].offsets.y + 25;
+		blocks[3].offsets.x = blocks[2].offsets.x - 25;
+		blocks[3].offsets.y = blocks[2].offsets.y;
+	    }
+	    if(blocks[3].offsets.x == blocks[2].offsets.x - 25)
+	    {
+		rotation++;
+	    }
+
+	    //reset width/height
+	    blocks[0].offsets.w = 25;
+	    blocks[0].offsets.h = 25;
+	    blocks[1].offsets.w = 25;
+	    blocks[1].offsets.h = 25;
+	    blocks[2].offsets.w = 25;
+	    blocks[2].offsets.h = 25;
+	    blocks[3].offsets.w = 25;
+	    blocks[3].offsets.h = 25;
+	    yes = true;
+	}
+	if(rotation == 2 && yes != true)
+	{
+	    blocks[1].offsets.x = blocks[0].offsets.x - 25;
+	    blocks[1].offsets.y = blocks[0].offsets.y;
+	    blocks[2].offsets.x = blocks[1].offsets.x - 25;
+	    blocks[2].offsets.y = blocks[1].offsets.y;
+	    blocks[3].offsets.x = blocks[2].offsets.x;
+	    blocks[3].offsets.y = blocks[2].offsets.y - 25;
+
+	    while(blocks[3].offsets.y != blocks[2].offsets.y - 25)
+	    {
+	        blocks[1].offsets.x = blocks[0].offsets.x - 25;
+	        blocks[1].offsets.y = blocks[0].offsets.y;
+	        blocks[2].offsets.x = blocks[1].offsets.x - 25;
+	        blocks[2].offsets.y = blocks[1].offsets.y;
+	        blocks[3].offsets.x = blocks[2].offsets.x;
+	        blocks[3].offsets.y = blocks[2].offsets.y - 25;
+	    }
+	    if(blocks[3].offsets.y == blocks[2].offsets.y - 25)
+	    {
+		rotation++;
+	    }
+
+	    //reset width/height
+	    blocks[0].offsets.w = 25;
+	    blocks[0].offsets.h = 25;
+	    blocks[1].offsets.w = 25;
+	    blocks[1].offsets.h = 25;
+	    blocks[2].offsets.w = 25;
+	    blocks[2].offsets.h = 25;
+	    blocks[3].offsets.w = 25;
+	    blocks[3].offsets.h = 25;
+	    yes = true;
+	}
+	if(rotation == 3 && yes != true)
+	{
+	    blocks[1].offsets.x = blocks[0].offsets.x;
+	    blocks[1].offsets.y = blocks[0].offsets.y - 25;
+	    blocks[2].offsets.x = blocks[1].offsets.x;
+	    blocks[2].offsets.y = blocks[1].offsets.y - 25;
+	    blocks[3].offsets.x = blocks[2].offsets.x + 25;
+	    blocks[3].offsets.y = blocks[2].offsets.y;
+
+	    while(blocks[3].offsets.x != blocks[2].offsets.x + 25)
+	    {
+	        blocks[1].offsets.x = blocks[0].offsets.x;
+	        blocks[1].offsets.y = blocks[0].offsets.y - 25;
+	        blocks[2].offsets.x = blocks[1].offsets.x;
+	        blocks[2].offsets.y = blocks[1].offsets.y - 25;
+	        blocks[3].offsets.x = blocks[2].offsets.x + 25;
+	        blocks[3].offsets.y = blocks[2].offsets.y;
+	    }
+	    if(blocks[3].offsets.x == blocks[2].offsets.x + 25)
+	    {
+		rotation++;
+	    }
+
+	    //reset width/height
+	    blocks[0].offsets.w = 25;
+	    blocks[0].offsets.h = 25;
+	    blocks[1].offsets.w = 25;
+	    blocks[1].offsets.h = 25;
+	    blocks[2].offsets.w = 25;
+	    blocks[2].offsets.h = 25;
+	    blocks[3].offsets.w = 25;
+	    blocks[3].offsets.h = 25;
+	    yes = true;
 	}
     }
     if(currForm == 3)
     {
-	if(rotation == 0) 
-	{
-	    blocks[1].offsets.x = blocks[0].offsets.x;
-	    blocks[1].offsets.y = blocks[0].offsets.y + 25;
-	    blocks[2].offsets.x = blocks[1].offsets.x - 25;
-	    blocks[2].offsets.y = blocks[1].offsets.y;
-	    blocks[3].offsets.x = blocks[2].offsets.x;
-	    blocks[3].offsets.y = blocks[2].offsets.y + 25;
-
-	    //reset width/height
-	    blocks[0].offsets.w = 25;
-	    blocks[0].offsets.h = 25;
-	    blocks[1].offsets.w = 25;
-	    blocks[1].offsets.h = 25;
-	    blocks[2].offsets.w = 25;
-	    blocks[2].offsets.h = 25;
-	    blocks[3].offsets.w = 25;
-	    blocks[3].offsets.h = 25;
-	}
-	if(rotation == 1)
-	{
-	    blocks[1].offsets.x = blocks[0].offsets.x - 25;
-	    blocks[1].offsets.y = blocks[0].offsets.y;
-	    blocks[2].offsets.x = blocks[1].offsets.x;
-	    blocks[2].offsets.y = blocks[1].offsets.y - 25;
-	    blocks[3].offsets.x = blocks[2].offsets.x - 25;
-	    blocks[3].offsets.y = blocks[2].offsets.y;
-
-	    //reset width/height
-	    blocks[0].offsets.w = 25;
-	    blocks[0].offsets.h = 25;
-	    blocks[1].offsets.w = 25;
-	    blocks[1].offsets.h = 25;
-	    blocks[2].offsets.w = 25;
-	    blocks[2].offsets.h = 25;
-	    blocks[3].offsets.w = 25;
-	    blocks[3].offsets.h = 25;
-	}
-	if(rotation == 2)
-	{
-	    blocks[1].offsets.x = blocks[0].offsets.x;
-	    blocks[1].offsets.y = blocks[0].offsets.y - 25;
-	    blocks[2].offsets.x = blocks[1].offsets.x + 25;
-	    blocks[2].offsets.y = blocks[1].offsets.y;
-	    blocks[3].offsets.x = blocks[2].offsets.x;
-	    blocks[3].offsets.y = blocks[2].offsets.y - 25;
-
-	    //reset width/height
-	    blocks[0].offsets.w = 25;
-	    blocks[0].offsets.h = 25;
-	    blocks[1].offsets.w = 25;
-	    blocks[1].offsets.h = 25;
-	    blocks[2].offsets.w = 25;
-	    blocks[2].offsets.h = 25;
-	    blocks[3].offsets.w = 25;
-	    blocks[3].offsets.h = 25;
-	}
-	if(rotation == 3)
+	if(rotation == 0 && yes != true) 
 	{
 	    blocks[1].offsets.x = blocks[0].offsets.x + 25;
 	    blocks[1].offsets.y = blocks[0].offsets.y;
@@ -414,6 +476,19 @@ void Tetramino::rotate()
 	    blocks[2].offsets.y = blocks[1].offsets.y + 25;
 	    blocks[3].offsets.x = blocks[2].offsets.x + 25;
 	    blocks[3].offsets.y = blocks[2].offsets.y;
+	    while(blocks[3].offsets.y != blocks[2].offsets.y)
+	    {
+	        blocks[1].offsets.x = blocks[0].offsets.x + 25;
+	        blocks[1].offsets.y = blocks[0].offsets.y;
+	        blocks[2].offsets.x = blocks[1].offsets.x;
+	        blocks[2].offsets.y = blocks[1].offsets.y + 25;
+	        blocks[3].offsets.x = blocks[2].offsets.x + 25;
+	        blocks[3].offsets.y = blocks[2].offsets.y;
+	    }
+	    if(blocks[3].offsets.y == blocks[2].offsets.y)
+	    {
+		rotation++;
+	    }
 
 	    //reset width/height
 	    blocks[0].offsets.w = 25;
@@ -424,18 +499,29 @@ void Tetramino::rotate()
 	    blocks[2].offsets.h = 25;
 	    blocks[3].offsets.w = 25;
 	    blocks[3].offsets.h = 25;
+	    yes = true;
 	}
-    }
-    if(currForm == 4)
-    {
-	if(rotation == 0) 
+	if(rotation == 1 && yes != true)
 	{
 	    blocks[1].offsets.x = blocks[0].offsets.x;
 	    blocks[1].offsets.y = blocks[0].offsets.y + 25;
 	    blocks[2].offsets.x = blocks[1].offsets.x - 25;
 	    blocks[2].offsets.y = blocks[1].offsets.y;
-	    blocks[3].offsets.x = blocks[1].offsets.x;
-	    blocks[3].offsets.y = blocks[1].offsets.y + 25;
+	    blocks[3].offsets.x = blocks[2].offsets.x;
+	    blocks[3].offsets.y = blocks[2].offsets.y + 25;
+	    while(blocks[3].offsets.y != blocks[2].offsets.y + 25)
+	    {
+	        blocks[1].offsets.x = blocks[0].offsets.x;
+	        blocks[1].offsets.y = blocks[0].offsets.y + 25;
+	        blocks[2].offsets.x = blocks[1].offsets.x - 25;
+	        blocks[2].offsets.y = blocks[1].offsets.y;
+	        blocks[3].offsets.x = blocks[2].offsets.x;
+	        blocks[3].offsets.y = blocks[2].offsets.y + 25;
+	    }
+	    if(blocks[3].offsets.y == blocks[2].offsets.y + 25)
+	    {
+		rotation++;
+	    }
 
 	    //reset width/height
 	    blocks[0].offsets.w = 25;
@@ -446,15 +532,29 @@ void Tetramino::rotate()
 	    blocks[2].offsets.h = 25;
 	    blocks[3].offsets.w = 25;
 	    blocks[3].offsets.h = 25;
+	    yes = true;
 	}
-	if(rotation == 1)
+	if(rotation == 2 && yes != true)
 	{
 	    blocks[1].offsets.x = blocks[0].offsets.x - 25;
 	    blocks[1].offsets.y = blocks[0].offsets.y;
 	    blocks[2].offsets.x = blocks[1].offsets.x;
 	    blocks[2].offsets.y = blocks[1].offsets.y - 25;
-	    blocks[3].offsets.x = blocks[1].offsets.x - 25;
-	    blocks[3].offsets.y = blocks[1].offsets.y;
+	    blocks[3].offsets.x = blocks[2].offsets.x - 25;
+	    blocks[3].offsets.y = blocks[2].offsets.y;
+	    while(blocks[3].offsets.y != blocks[2].offsets.y)
+	    {
+	        blocks[1].offsets.x = blocks[0].offsets.x - 25;
+	        blocks[1].offsets.y = blocks[0].offsets.y;
+	        blocks[2].offsets.x = blocks[1].offsets.x;
+	        blocks[2].offsets.y = blocks[1].offsets.y - 25;
+	        blocks[3].offsets.x = blocks[2].offsets.x - 25;
+	        blocks[3].offsets.y = blocks[2].offsets.y;
+	    }
+	    if(blocks[3].offsets.y == blocks[2].offsets.y)
+	    {
+		rotation++;
+	    }
 
 	    //reset width/height
 	    blocks[0].offsets.w = 25;
@@ -465,15 +565,29 @@ void Tetramino::rotate()
 	    blocks[2].offsets.h = 25;
 	    blocks[3].offsets.w = 25;
 	    blocks[3].offsets.h = 25;
+	    yes = true;
 	}
-	if(rotation == 2)
+	if(rotation == 3 && yes != true)
 	{
 	    blocks[1].offsets.x = blocks[0].offsets.x;
 	    blocks[1].offsets.y = blocks[0].offsets.y - 25;
 	    blocks[2].offsets.x = blocks[1].offsets.x + 25;
 	    blocks[2].offsets.y = blocks[1].offsets.y;
-	    blocks[3].offsets.x = blocks[1].offsets.x;
-	    blocks[3].offsets.y = blocks[1].offsets.y - 25;
+	    blocks[3].offsets.x = blocks[2].offsets.x;
+	    blocks[3].offsets.y = blocks[2].offsets.y - 25;
+	    while(blocks[3].offsets.y != blocks[2].offsets.y - 25)
+	    {
+	        blocks[1].offsets.x = blocks[0].offsets.x;
+	        blocks[1].offsets.y = blocks[0].offsets.y - 25;
+	        blocks[2].offsets.x = blocks[1].offsets.x + 25;
+	        blocks[2].offsets.y = blocks[1].offsets.y;
+	        blocks[3].offsets.x = blocks[2].offsets.x;
+	        blocks[3].offsets.y = blocks[2].offsets.y - 25;
+	    }
+	    if(blocks[3].offsets.y == blocks[2].offsets.y - 25)
+	    {
+		rotation++;
+	    }
 
 	    //reset width/height
 	    blocks[0].offsets.w = 25;
@@ -484,8 +598,12 @@ void Tetramino::rotate()
 	    blocks[2].offsets.h = 25;
 	    blocks[3].offsets.w = 25;
 	    blocks[3].offsets.h = 25;
+	    yes = true;
 	}
-	if(rotation == 3)
+    }
+    if(currForm == 4)
+    {
+	if(rotation == 0 && yes != true) 
 	{
 	    blocks[1].offsets.x = blocks[0].offsets.x + 25;
 	    blocks[1].offsets.y = blocks[0].offsets.y;
@@ -493,6 +611,19 @@ void Tetramino::rotate()
 	    blocks[2].offsets.y = blocks[1].offsets.y + 25;
 	    blocks[3].offsets.x = blocks[1].offsets.x + 25;
 	    blocks[3].offsets.y = blocks[1].offsets.y;
+	    while(blocks[3].offsets.y != blocks[1].offsets.y)
+	    {
+	        blocks[1].offsets.x = blocks[0].offsets.x + 25;
+	        blocks[1].offsets.y = blocks[0].offsets.y;
+	        blocks[2].offsets.x = blocks[1].offsets.x;
+	        blocks[2].offsets.y = blocks[1].offsets.y + 25;
+	        blocks[3].offsets.x = blocks[1].offsets.x + 25;
+	        blocks[3].offsets.y = blocks[1].offsets.y;
+	    }
+	    if(blocks[3].offsets.y == blocks[1].offsets.y)
+	    {
+		rotation++;
+	    }
 
 	    //reset width/height
 	    blocks[0].offsets.w = 25;
@@ -503,6 +634,106 @@ void Tetramino::rotate()
 	    blocks[2].offsets.h = 25;
 	    blocks[3].offsets.w = 25;
 	    blocks[3].offsets.h = 25;
+	    yes = true;
+	}
+	if(rotation == 1 && yes != true)
+	{
+	    blocks[1].offsets.x = blocks[0].offsets.x;
+	    blocks[1].offsets.y = blocks[0].offsets.y + 25;
+	    blocks[2].offsets.x = blocks[1].offsets.x - 25;
+	    blocks[2].offsets.y = blocks[1].offsets.y;
+	    blocks[3].offsets.x = blocks[1].offsets.x;
+	    blocks[3].offsets.y = blocks[1].offsets.y + 25;
+	    while(blocks[3].offsets.y != blocks[1].offsets.y + 25)
+	    {
+	        blocks[1].offsets.x = blocks[0].offsets.x;
+	        blocks[1].offsets.y = blocks[0].offsets.y + 25;
+	        blocks[2].offsets.x = blocks[1].offsets.x - 25;
+	        blocks[2].offsets.y = blocks[1].offsets.y;
+	        blocks[3].offsets.x = blocks[1].offsets.x;
+	        blocks[3].offsets.y = blocks[1].offsets.y + 25;
+	    }
+	    if(blocks[3].offsets.y == blocks[1].offsets.y + 25)
+	    {
+		rotation++;
+	    }
+
+	    //reset width/height
+	    blocks[0].offsets.w = 25;
+	    blocks[0].offsets.h = 25;
+	    blocks[1].offsets.w = 25;
+	    blocks[1].offsets.h = 25;
+	    blocks[2].offsets.w = 25;
+	    blocks[2].offsets.h = 25;
+	    blocks[3].offsets.w = 25;
+	    blocks[3].offsets.h = 25;
+	    yes = true;
+	}
+	if(rotation == 2 && yes != true)
+	{
+	    blocks[1].offsets.x = blocks[0].offsets.x - 25;
+	    blocks[1].offsets.y = blocks[0].offsets.y;
+	    blocks[2].offsets.x = blocks[1].offsets.x;
+	    blocks[2].offsets.y = blocks[1].offsets.y - 25;
+	    blocks[3].offsets.x = blocks[1].offsets.x - 25;
+	    blocks[3].offsets.y = blocks[1].offsets.y;
+	    while(blocks[3].offsets.y != blocks[1].offsets.y)
+	    {
+	        blocks[1].offsets.x = blocks[0].offsets.x - 25;
+	        blocks[1].offsets.y = blocks[0].offsets.y;
+	        blocks[2].offsets.x = blocks[1].offsets.x;
+	        blocks[2].offsets.y = blocks[1].offsets.y - 25;
+	        blocks[3].offsets.x = blocks[1].offsets.x - 25;
+	        blocks[3].offsets.y = blocks[1].offsets.y;
+	    }
+	    if(blocks[3].offsets.y == blocks[1].offsets.y)
+	    {
+		rotation++;
+	    }
+
+	    //reset width/height
+	    blocks[0].offsets.w = 25;
+	    blocks[0].offsets.h = 25;
+	    blocks[1].offsets.w = 25;
+	    blocks[1].offsets.h = 25;
+	    blocks[2].offsets.w = 25;
+	    blocks[2].offsets.h = 25;
+	    blocks[3].offsets.w = 25;
+	    blocks[3].offsets.h = 25;
+	    yes = true;
+	}
+	if(rotation == 3 && yes != true)
+	{
+	    blocks[1].offsets.x = blocks[0].offsets.x;
+	    blocks[1].offsets.y = blocks[0].offsets.y - 25;
+	    blocks[2].offsets.x = blocks[1].offsets.x + 25;
+	    blocks[2].offsets.y = blocks[1].offsets.y;
+	    blocks[3].offsets.x = blocks[1].offsets.x;
+	    blocks[3].offsets.y = blocks[1].offsets.y - 25;
+	    while(blocks[3].offsets.y != blocks[1].offsets.y - 25)
+	    {
+	        blocks[1].offsets.x = blocks[0].offsets.x;
+	        blocks[1].offsets.y = blocks[0].offsets.y - 25;
+	        blocks[2].offsets.x = blocks[1].offsets.x + 25;
+	        blocks[2].offsets.y = blocks[1].offsets.y;
+	        blocks[3].offsets.x = blocks[1].offsets.x;
+	        blocks[3].offsets.y = blocks[1].offsets.y - 25;
+	    }
+	    if(blocks[3].offsets.y == blocks[1].offsets.y - 25)
+	    {
+		rotation++;
+	    }
+
+	    //reset width/height
+	    blocks[0].offsets.w = 25;
+	    blocks[0].offsets.h = 25;
+	    blocks[1].offsets.w = 25;
+	    blocks[1].offsets.h = 25;
+	    blocks[2].offsets.w = 25;
+	    blocks[2].offsets.h = 25;
+	    blocks[3].offsets.w = 25;
+	    blocks[3].offsets.h = 25;
+	    yes = true;
 	}
     }
 }
@@ -514,6 +745,9 @@ void Tetramino::gravity()
 
 void Tetramino::move()
 {
+    int d;
+    int y = 475;
+    int x = 0;
         //move block 1
         blocks[0].offsets.y += yVel;
         blocks[0].offsets.x += xVel;
@@ -524,6 +758,8 @@ void Tetramino::move()
 	    blocks[2].offsets.y -= yVel;
 	    blocks[3].offsets.y -= yVel;
         }
+	x = blocks[0].offsets.y;
+	d = y - x;
 	if(blocks[0].offsets.y + 25 > SCREEN_HEIGHT)
 	{
 	    blocks[0].offsets.y -= yVel;
@@ -531,6 +767,7 @@ void Tetramino::move()
 	    blocks[2].offsets.y -= yVel;
 	    blocks[3].offsets.y -= yVel;
 	    alive = false;
+	    bottom = true;
 	}
         if(blocks[0].offsets.x <  0 || blocks[0].offsets.x + 25 > SCREEN_WIDTH)
         {
@@ -550,6 +787,8 @@ void Tetramino::move()
 	    blocks[2].offsets.y -= yVel;
 	    blocks[3].offsets.y -= yVel;
         }
+	x = blocks[1].offsets.y;
+	d = y - x;
 	if(blocks[1].offsets.y + 25 > SCREEN_HEIGHT)
 	{
 	    blocks[0].offsets.y -= yVel;
@@ -557,6 +796,7 @@ void Tetramino::move()
 	    blocks[2].offsets.y -= yVel;
 	    blocks[3].offsets.y -= yVel;
 	    alive = false;
+	    bottom = true;
 	}
         if(blocks[1].offsets.x < 0 || blocks[1].offsets.x + 25 > SCREEN_WIDTH)
         {
@@ -576,6 +816,8 @@ void Tetramino::move()
 	    blocks[2].offsets.y -= yVel;
 	    blocks[3].offsets.y -= yVel;
         }
+	x = blocks[1].offsets.y;
+	d = y - x;
 	if(blocks[2].offsets.y + 25 > SCREEN_HEIGHT)
 	{
 	    blocks[0].offsets.y -= yVel;
@@ -583,6 +825,7 @@ void Tetramino::move()
 	    blocks[2].offsets.y -= yVel;
 	    blocks[3].offsets.y -= yVel;
 	    alive = false;
+	    bottom = true;
 	}
         if(blocks[2].offsets.x < 0 || blocks[2].offsets.x + 25 > SCREEN_WIDTH)
         {
@@ -602,6 +845,8 @@ void Tetramino::move()
 	    blocks[2].offsets.y -= yVel;
 	    blocks[3].offsets.y -= yVel;
         }
+	x = blocks[1].offsets.y;
+	d = y - x;
 	if(blocks[3].offsets.y + 25 > SCREEN_HEIGHT)
 	{
 	    blocks[0].offsets.y -= yVel;
@@ -609,6 +854,7 @@ void Tetramino::move()
 	    blocks[2].offsets.y -= yVel;
 	    blocks[3].offsets.y -= yVel;
 	    alive = false;
+	    bottom = true;
 	}
         if(blocks[3].offsets.x <  0 || blocks[3].offsets.x + 25 > SCREEN_WIDTH)
         {
@@ -617,6 +863,127 @@ void Tetramino::move()
 	    blocks[2].offsets.x -= xVel;
 	    blocks[3].offsets.x -= xVel;
         }
+	if(bottom == true && d != 0)
+	{
+	    if(currForm == 0)
+	    {
+	        if(rotation == 0 || rotation == 2)
+	        {
+	            blocks[0].offsets.y = 475;
+	            blocks[1].offsets.y = 450;
+	            blocks[2].offsets.y = 425;
+	            blocks[3].offsets.y = 400;
+	        }
+	        if(rotation == 1 || rotation == 3)
+	        {
+		    blocks[0].offsets.y = 475;
+		    blocks[1].offsets.y = 475;
+		    blocks[2].offsets.y = 475;
+		    blocks[3].offsets.y = 475;
+	        }
+	    }
+	    if(currForm == 1)
+	    {
+		if(rotation == 0)
+		{
+		    blocks[0].offsets.y = 475;
+		    blocks[1].offsets.y = 450;
+		    blocks[2].offsets.y = 425;
+		    blocks[3].offsets.y = 425;
+		}
+		if(rotation == 1)
+		{
+		    blocks[0].offsets.y = 450;
+		    blocks[1].offsets.y = 450;
+		    blocks[2].offsets.y = 450;
+		    blocks[3].offsets.y = 475;
+		}
+		if(rotation == 2)
+		{
+		    blocks[0].offsets.y = 425;
+		    blocks[1].offsets.y = 450;
+		    blocks[2].offsets.y = 475;
+		    blocks[3].offsets.y = 475;
+		}
+		if(rotation == 3)
+		{
+		    blocks[0].offsets.y = 475;
+		    blocks[1].offsets.y = 475;
+		    blocks[2].offsets.y = 475;
+		    blocks[3].offsets.y = 450;
+		}
+	    }
+	    if(currForm == 2)
+	    {
+		blocks[0].offsets.y = 475;
+		blocks[1].offsets.y = 475;
+		blocks[2].offsets.y = 450;
+		blocks[3].offsets.y = 450;
+	    }
+	    if(currForm == 3)
+	    {
+		if(rotation == 1)
+		{
+		    blocks[0].offsets.y = 450;
+		    blocks[1].offsets.y = 450;
+		    blocks[2].offsets.y = 475;
+		    blocks[3].offsets.y = 475;
+		}
+		if(rotation == 2)
+		{
+		    blocks[0].offsets.y = 425;
+		    blocks[1].offsets.y = 450;
+		    blocks[2].offsets.y = 450;
+		    blocks[3].offsets.y = 475;
+		}
+		if(rotation == 3)
+		{
+		    blocks[0].offsets.y = 475;
+		    blocks[1].offsets.y = 475;
+		    blocks[2].offsets.y = 450;
+		    blocks[3].offsets.y = 450;
+		}
+		if(rotation == 0)
+		{
+		    blocks[0].offsets.y = 475;
+		    blocks[1].offsets.y = 450;
+		    blocks[2].offsets.y = 450;
+		    blocks[3].offsets.y = 425;
+		}
+	    }
+	    if(currForm == 4)
+	    {
+		if(rotation == 0)
+		{
+		    blocks[0].offsets.y = 475;
+		    blocks[1].offsets.y = 450;
+		    blocks[2].offsets.y = 450;
+		    blocks[3].offsets.y = 425;
+		}
+		if(rotation == 1)
+		{
+		    blocks[0].offsets.y = 450;
+		    blocks[1].offsets.y = 450;
+		    blocks[2].offsets.y = 475;
+		    blocks[3].offsets.y = 450;
+		}
+		if(rotation == 2)
+		{
+		    blocks[0].offsets.y = 425;
+		    blocks[1].offsets.y = 450;
+		    blocks[2].offsets.y = 450;
+		    blocks[3].offsets.y = 475;
+		}
+		}
+		if(rotation == 3)
+		{
+		    blocks[0].offsets.y = 475;
+		    blocks[1].offsets.y = 475;
+		    blocks[2].offsets.y = 450;
+		    blocks[3].offsets.y = 475;
+		}
+	    }
+	
 }
 
 void Tetramino::show()
